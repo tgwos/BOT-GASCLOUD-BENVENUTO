@@ -9,6 +9,7 @@ from telegram.ext import (
 import os
 TOKEN = os.environ['TOKEN']
 
+
 CANAL_TELEGRAM = "t.me/+iMgIPdF4HPswMDRh"  # Inserisci l'username del canale o il link corto senza https://t.me/
 
 # 🔹 MENU PRINCIPALE
@@ -113,4 +114,5 @@ async def spedizione(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📩 Riceverai un *QR code* con cui potrai ritirare il tuo pacco "
         "in qualsiasi punto InPost.\n\n"
         "📍 Trova il locker più vicino a te qui:\n"
+
 
