@@ -1,4 +1,5 @@
 import os
+from flask import Flask, request
 from telegram import (
     Update,
     InlineKeyboardButton,
@@ -80,9 +81,7 @@ def back_keyboard():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_photo(
         photo=LOGO_URL,
-        caption=(
-            "\nBENVENUTI SU GAS CLOUD BOT.\n"
-        ),
+        caption="BENVENUTI SU GAS CLOUD BOT.",
         reply_markup=main_keyboard()
     )
 
@@ -108,21 +107,35 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif query.data == "back":
         await query.edit_message_caption(
-            caption=(
-                "BENVENUTI SU GAS CLOUD BOT.\n\n"
-            ),
+            caption="BENVENUTI SU GAS CLOUD BOT.",
             reply_markup=main_keyboard()
         )
 
-# 🔹 Avvio bot
-def main():
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CallbackQueryHandler(buttons))
-    app.run_polling()
+# ================================
+# 🔥 CONFIGURAZIONE WEBHOOK RENDER
+# ================================
 
-# ✅ QUESTO FA PARTIRE IL BOT
-if __name__ == "__main__":
-    main()
+flask_app = Flask(__name__)
+
+application = ApplicationBuilder().token(TOKEN).build()
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CallbackQueryHandler(buttons))
+
+@flask_app.route("/")
+def home():
+    return "Bot online"
+
+@flask_app.route("/webhook", methods=["POST"])
+async def webhook():
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    await application.process_update(update)
+    return "ok"
+
+if name == "__main__":
+    application.bot.set_webhook(
+        url=f"{os.environ.get('RENDER_EXTERNAL_URL')}/webhook"
+    )
+    flask_app.run(host="0.0.0.0", port=10000)
+
 
 
