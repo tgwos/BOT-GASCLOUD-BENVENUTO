@@ -131,11 +131,12 @@ async def webhook():
     await application.process_update(update)
     return "ok"
 
-if name == "__main__":
+if __name__ == "__main__":
     application.bot.set_webhook(
         url=f"{os.environ.get('RENDER_EXTERNAL_URL')}/webhook"
     )
     flask_app.run(host="0.0.0.0", port=10000)
+
 
 
 
